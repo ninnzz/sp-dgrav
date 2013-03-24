@@ -67,8 +67,8 @@ class dgravMainModule{
 
 		$data_mass = $dbM->index();
 		$requests = $request->index($this->appData['db_name'],$this->appData['host']);
-		$lat = $latency->index($this->appData['host']);
 		$bw = $bandwidth->index($this->appData['host']);
+		$lat = $latency->index($this->appData['host']);
 /*
 		print_r($data_mass);
 		print_r($requests);
@@ -89,7 +89,7 @@ class dgravMainModule{
 			$gravity = 0;
 			$log_message = 'Error in getting data gravity';
 		} else{
-			$dir = "../../../app_data/$app_id/$d1";
+			$dir = "../../../app_data/$app_id/logs";
 			$fname = "/log[$d1].log";
 			$gravity = ($data_mass*$app_mass*$ave_request)/pow(($ping+($ave_request_size/$bndw)),2);
 			$log_data = "$gravity,$data_mass,$app_mass,$ave_request,$ping,$ave_request_size,$bndw";

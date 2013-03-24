@@ -79,9 +79,9 @@ function getDataServerInfo(){
 		//alert(data);
 	});
 }
-function toggleMonitor(obj,opt){
-
-	$.post("/dgrav/core/api/index.php/admin/monitor",{monitoring:opt},function(data){
+function toggleMonitor(obj,opt,id){
+	
+	$.post("/dgrav/core/api/index.php/admin/monitor",{monitoring:opt,id:id},function(data){
 		if(opt == 1){
 			$(obj).removeClass('btn btn-danger');
 			$(obj).attr('onclick','toggleMonitor(this,0)');
@@ -111,9 +111,9 @@ function getAllApp(opt){
 				$('#main_list').append(" <li class=''><a href='#' onclick=\"getAppConfig('"+apps[i]['id']+"',this)\">"+apps[i]['name']+"</a></li>");
 			} else if(opt == 0){
 				if(apps[i]['monitoring'] == '1'){
-					btn = "<button class='btn btn-success' onclick='toggleMonitor(this,0)'>Monitoring</button>";
+					btn = "<button class='btn btn-success' onclick=\"toggleMonitor(this,0,'"+apps[i]['id']+"')\">Monitoring</button>";
 				} else{
-					btn = "<button class='btn btn-danger' onclick='toggleMonitor(this,1)'> Stopped </button>";
+					btn = "<button class='btn btn-danger' onclick=\"toggleMonitor(this,1,'"+apps[i]['id']+"')\"> Stopped </button>";
 				}
 				$('#main_list').append("<tr class=''><td><h5>"+apps[i]['name']+"</h5></td><td>"+btn+"</td></tr>");
 			}

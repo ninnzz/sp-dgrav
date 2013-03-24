@@ -60,6 +60,7 @@ class requestsMod{
 		if((count($res1)-1) == 0){
 			$average_request_size = 0;			
 		} else if((count($res1)-1) > 0){
+			$size = ($size/1024)/1024;
 			$average_request_size = $size/(count($res1)-1);
 		}
 		if($timeElapsed == 0){

@@ -1,5 +1,5 @@
 <?php
-
+defined('AppAUTH') or die;
 /*	
 	Author: nino eclarin
 	Description: 

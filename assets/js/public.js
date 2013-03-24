@@ -1,44 +1,344 @@
 google.load('visualization', '1', {packages: ['motionchart']});
 
-    function drawVisualization() {
-      var data = new google.visualization.DataTable();
-      data.addColumn('string', 'Application');
-      data.addColumn('date', 'Date');
-      data.addColumn('number', 'Data Gravity');
-      data.addColumn('number', 'Data Mass(MB)');
-      data.addColumn('number', 'Application Mass(MB)');
-      data.addColumn('number', 'Request per Seconds');
-      data.addColumn('number', 'Latency(seconds)');
-      data.addColumn('number', 'Average Request Size(MB)');
-      data.addColumn('number', 'Bandwidth(MBps)');
-      data.addRows([
+function drawMotionChart(app_arr) {
+  var data = new google.visualization.DataTable();
 
-        ['Usc-csc-elections', new Date(2013,03,17,01,16,53), 0.0039856908062182,138.72732639,442.64,0.00029920411704865,0,37274.4,549],
-        ['Usc-csc-elections', new Date(2013,03,17,18,57,25), 974519.53811087,138.18092060,442.64,3,0,293.33333333333,676],
-        ['Usc-csc-elections', new Date(2013,03,17,19,03,44), 23337.702467234,138.18263340,442.64,0.125,0,404.66666666667,707],
-        ['Usc-csc-elections', new Date(2013,03,18,19,04,29), 8299.2679005081,138.19342899,442.64,0.12,0,642.33333333333,683],
-        ['Usc-csc-elections', new Date(2013,03,18,19,05,00), 1387.3303853396,138.22898197,442.64,0.10309278350515,0,1656.8,777],
-        ['Usc-csc-elections', new Date(2013,03,19,19,06,32), 821.33456626359,138.23799992,442.64,0.058823529411765,0,1597.2727272727,763],
-        ['Usc-csc-elections', new Date(2013,03,19,20,06,13), 28.332190609032,138.37633610,442.64,0.0066418703506908,0,2398.64,633],
-        
-        ['Get-14', new Date(2013,03,16,20,06,13), 27.528223542466,138.39472294,442.64,0.0063387423935091,0,2478.8,660],
-        ['Get-14', new Date(2013,03,16,20,06,13), 27.195559243275,138.39472294,442.64,0.0063387423935091,0,2478.8,656],
-        ['Get-14', new Date(2013,03,17,20,06,13), 26.782572694033,138.39472294,442.64,0.0063387423935091,0,2478.8,651],
-        ['Get-14', new Date(2013,03,18,20,06,13), 28.708474008212,138.39472294,442.64,0.0063387423935091,0,2478.8,674],
-        ['Get-14', new Date(2013,03,19,20,06,13), 28.538350092289,138.39472294,442.64,0.0063387423935091,0,2478.8,672],
-        ['Get-14', new Date(2013,03,19,20,06,13), 34.793500611649,138.39472294,442.64,0.0063387423935091,0,2478.8,742],
-        ['Get-14', new Date(2013,03,20,20,06,13), 31.946958432991,138.39472294,442.64,0.0063387423935091,0,2478.8,711],
-       
-      ]);
+
+
+
+  var ser = [];
+  for(i=0;i<app_arr.length;i++){
     
-    	var motionchart = new google.visualization.MotionChart(
-          document.getElementById('visualization'));
-	    var options = {};
-		//options['state'] = '{"iconKeySettings":[],"stateVersion":3,"time":"notime","xAxisOption":"_NOTHING","playDuration":15,"iconType":"BUBBLE","sizeOption":"_NOTHING","xZoomedDataMin":null,"xZoomedIn":false,"duration":{"multiplier":1,"timeUnit":"hours"},"yZoomedDataMin":null,"xLambda":1,"colorOption":"_NOTHING","nonSelectedAlpha":0.4,"dimensions":{"iconDimensions":[]},"yZoomedIn":false,"yAxisOption":"_NOTHING","yLambda":1,"yZoomedDataMax":null,"showTrails":true,"xZoomedDataMax":null};';
-		options['width'] = 1000;
-		options['height'] = 550;
-      	motionchart.draw(data, options);
+    app_n = ($.trim(app_arr[i])).split("@@");
+    app_name = app_n[0];
+    app_data = ($.trim(app_n[1])).split("\n");
+    
+
+    for(j=0;j<app_data.length;j++){
+      tmp = ($.trim(app_data[j])).split('|');
+      tmp_date = ($.trim(tmp[0])).split(' ');
+      tmp_date1 = ($.trim(tmp_date[0])).split('-');
+      tmp_date2 = ($.trim(tmp_date[1])).split(':');
+      tmp_data = ($.trim(tmp[1])).split(',');
+      ser.push([app_name,new Date(tmp_date1[0],((tmp_date1[1]*1)-1),tmp_date1[2],tmp_date2[0],tmp_date2[1],tmp_date2[2]),tmp_data[0]*1,tmp_data[2]*1,tmp_data[1]*1,tmp_data[4]*1,tmp_data[3]*1,tmp_data[5]*1,tmp_data[6]*1]);
+
     }
-    
+  }
+  data.addColumn('string', 'Application');
+  data.addColumn('date', 'Date');
+  data.addColumn('number', 'Data Gravity');
+  data.addColumn('number', 'Data Mass(MB)');
+  data.addColumn('number', 'Application Mass(MB)');
+  data.addColumn('number', 'Request per Seconds');
+  data.addColumn('number', 'Latency(seconds)');
+  data.addColumn('number', 'Average Request Size(MB)');
+  data.addColumn('number', 'Bandwidth(MBps)');
+  data.addRows(ser);
 
-    google.setOnLoadCallback(drawVisualization);
+  var motionchart = new google.visualization.MotionChart(
+  document.getElementById('visualization'));
+  var options = {};
+  options['state'] = {"iconKeySettings":[],"stateVersion":3,"time":"notime","xAxisOption":"_NOTHING","playDuration":15,"iconType":"BUBBLE","sizeOption":"_NOTHING","xZoomedDataMin":null,"xZoomedIn":false,"duration":{"multiplier":1,"timeUnit":"hours"},"yZoomedDataMin":null,"xLambda":1,"colorOption":"_NOTHING","nonSelectedAlpha":0.4,"dimensions":{"iconDimensions":[]},"yZoomedIn":false,"yAxisOption":"_NOTHING","yLambda":1,"yZoomedDataMax":null,"showTrails":true,"xZoomedDataMax":null};
+  //options['state'] = {"uniColorForNonSelected":false,"iconKeySettings":[],"yAxisOption":"3","nonSelectedAlpha":0.4,"time":"notime","showTrails":true,"xAxisOption":"2","yZoomedDataMin":131.39472294,"yLambda":1,"yZoomedDataMax":139.39472294,"orderedByY":false,"xZoomedDataMin":0.0039856908062182,"yZoomedIn":false,"orderedByX":false,"playDuration":15000,"xZoomedIn":false,"iconType":"BUBBLE","xLambda":1,"colorOption":"4","duration":{"timeUnit":"hours","multiplier":2},"xZoomedDataMax":974519.53811087,"dimensions":{"iconDimensions":["dim0"]},"sizeOption":"2"};
+
+  options['width'] = 1000;
+  options['height'] = 550;
+  motionchart.draw(data, options);
+}
+
+function drawLineChart(app_arr){
+
+    var ser = [];
+    for(i=0;i<app_arr.length;i++){
+      var app_i = {name:'',data:[]};
+
+      app_n = ($.trim(app_arr[i])).split("@@");
+      app_name = app_n[0];
+      app_data = ($.trim(app_n[1])).split("\n");
+      app_i['name']=app_name;
+      
+      for(j=0;j<app_data.length;j++){
+  
+        tmp = ($.trim(app_data[j])).split('|');
+        tmp_date = ($.trim(tmp[0])).split(' ');
+        tmp_date1 = ($.trim(tmp_date[0])).split('-');
+        tmp_date2 = ($.trim(tmp_date[1])).split(':');
+        tmp_data = ($.trim(tmp[1])).split(',');
+
+        app_i['data'].push([Date.UTC(tmp_date1[0],((tmp_date1[1]*1)-1),tmp_date1[2],tmp_date2[0],tmp_date2[1],tmp_date2[2]),tmp_data[0]*1]);
+
+      }
+      ser.push(app_i);
+    }
+
+    $('#visualization').fadeOut('slow',function(){
+        $('#visualization').css("display",'none');
+        $('#visualization').css("width",'78%');
+
+    
+          $('#visualization').highcharts({
+            chart: {
+                type: 'spline',
+                zoomType: 'xy'
+            },
+            title: {
+                text: 'Data Gravity Chart'
+            },
+            subtitle: {
+                text: 'Comparison of Data Gravity by each Application'
+            },
+            xAxis: {
+                type: 'datetime',
+                maxZoom: 3600,
+                dateTimeLabelFormats: { // don't display the dummy year
+                  month: '%e. %b',
+                  year: '%b'
+                }
+            },
+            yAxis: {
+                title: {
+                  text: 'Data Gravity'
+                },
+                min: 0
+            },
+            tooltip: {
+                formatter: function() {
+                  return '<b>'+ this.series.name +'</b><br/>'+
+                  Highcharts.dateFormat('%e. %b %H:%M:%S:', this.x) +'| value: '+ this.y ;
+                }
+            },
+            series:ser
+          });
+          $('#visualization').fadeIn('slow',function(){
+              $('#visualization').css("display",'block');
+              $('#visualization').css("width",'80%');
+          });
+
+    });
+
+}
+
+function drawBubbleChart(app_arr){
+    var ser = [];
+    for(i=0;i<app_arr.length;i++){
+      var app_i = {name:'',data:[]};
+
+      app_n = ($.trim(app_arr[i])).split("@@");
+      app_name = app_n[0];
+      app_data = ($.trim(app_n[1])).split("\n");
+      app_i['name']=app_name;
+      
+      for(j=0;j<app_data.length;j++){
+  
+        tmp = ($.trim(app_data[j])).split('|');
+        tmp_date = ($.trim(tmp[0])).split(' ');
+        tmp_date1 = ($.trim(tmp_date[0])).split('-');
+        tmp_date2 = ($.trim(tmp_date[1])).split(':');
+        tmp_data = ($.trim(tmp[1])).split(',');
+
+        app_i['data'].push([Date.UTC(tmp_date1[0],((tmp_date1[1]*1)-1),tmp_date1[2],tmp_date2[0],tmp_date2[1],tmp_date2[2]),tmp_data[0]*1,tmp_data[4]*1]);
+
+      }
+      ser.push(app_i);
+    }
+    console.log(ser);
+    $('#visualization').fadeOut('slow',function(){
+        $('#visualization').css("display",'none');
+        $('#visualization').css("width",'78%');
+
+    
+          $('#visualization').highcharts({
+            chart: {
+                type: 'bubble',
+                zoomType: 'xy'
+            },
+            title: {
+                text: 'Data Gravity Chart'
+            },
+            subtitle: {
+                text: 'Comparison of Data Gravity by each Application'
+            },
+            xAxis: {
+                type: 'datetime',
+                maxZoom: 3600,
+                dateTimeLabelFormats: { // don't display the dummy year
+                  month: '%e. %b',
+                  year: '%b'
+                }
+            },
+            yAxis: {
+                title: {
+                  text: 'Data Gravity'
+                },
+                min: 0
+            },
+            tooltip: {
+                formatter: function() {
+                  return '<b>'+ this.series.name +'</b><br/>'+
+                  Highcharts.dateFormat('%e. %b %H:%M:%S:', this.x) +'| value: '+ this.y ;
+                }
+            },
+            series:ser
+          });
+          $('#visualization').fadeIn('slow',function(){
+              $('#visualization').css("display",'block');
+              $('#visualization').css("width",'80%');
+          });
+
+    });
+}
+
+function initVisualization(opt){  
+  
+
+  $.get("/dgrav/core/api/index.php/public/allgrav",function(data){
+    var obj = $.parseJSON(data);
+    app = obj['data'];
+    app_arr = ($.trim(app)).split("<!>");
+    
+    if(opt==1){
+      $("#curr_graph").value='1';
+      drawBubbleChart(app_arr);
+    } else if(opt==2){
+      $("#curr_graph").value='2';
+        drawMotionChart(app_arr);
+    } else if(opt==3){
+      $("#curr_graph").value='3';
+        drawLineChart(app_arr);
+    }
+  });
+
+
+}
+
+function loadSingleApp(id,appName){
+
+  $.get("/dgrav/core/api/index.php/public/app/"+id,function(data){
+    var obj = $.parseJSON(data);
+    app = obj['data'];
+ 
+    // !! maglagay d2 ng pangcheck kung walang laman or meron...!!
+
+    app_arr = ($.trim(app)).split("\n");
+    
+    var gravity = {
+      name: 'Data Gravity',
+      data: []
+    };
+    var app_mass = {
+      name: 'Application Mass(MB)',
+      data: []
+    };
+    var data_mass = {
+      name: 'Data Mass(MB)',
+      data: []
+    };
+    var latency = {
+      name: 'Latency(Seconds)',
+      data: []
+    };
+    var ave_req = {
+      name: 'Average Request per Second',
+      data: []
+    };
+    var ave_req_size = {
+      name: 'Average Request Size(MB)',
+      data: []
+    };
+    var bw = {
+      name: 'Bandwidth(MBs)',
+      data: []
+    };
+    var ser_data = [];
+
+    for(i=0;i<app_arr.length;i++){
+      tmp = ($.trim(app_arr[i])).split('|');
+      tmp_date = ($.trim(tmp[0])).split(' ');
+      tmp_date1 = ($.trim(tmp_date[0])).split('-');
+      tmp_date2 = ($.trim(tmp_date[1])).split(':');
+      tmp_data = ($.trim(tmp[1])).split(',');
+
+      gravity['data'].push([Date.UTC(tmp_date1[0],((tmp_date1[1]*1)-1),tmp_date1[2],tmp_date2[0],tmp_date2[1],tmp_date2[2]),tmp_data[0]*1]);
+      app_mass['data'].push([Date.UTC(tmp_date1[0],((tmp_date1[1]*1)-1),tmp_date1[2],tmp_date2[0],tmp_date2[1],tmp_date2[2]),tmp_data[2]*1]);
+      data_mass['data'].push([Date.UTC(tmp_date1[0],((tmp_date1[1]*1)-1),tmp_date1[2],tmp_date2[0],tmp_date2[1],tmp_date2[2]),tmp_data[1]*1]);
+      latency['data'].push([Date.UTC(tmp_date1[0],((tmp_date1[1]*1)-1),tmp_date1[2],tmp_date2[0],tmp_date2[1],tmp_date2[2]),tmp_data[4]*1]);
+      ave_req['data'].push([Date.UTC(tmp_date1[0],((tmp_date1[1]*1)-1),tmp_date1[2],tmp_date2[0],tmp_date2[1],tmp_date2[2]),tmp_data[3]*1]);
+      ave_req_size['data'].push([Date.UTC(tmp_date1[0],((tmp_date1[1]*1)-1),tmp_date1[2],tmp_date2[0],tmp_date2[1],tmp_date2[2]),tmp_data[5]*1]);
+      bw['data'].push([Date.UTC(tmp_date1[0],((tmp_date1[1]*1)-1),tmp_date1[2],tmp_date2[0],tmp_date2[1],tmp_date2[2]),tmp_data[6]*1]);
+    }
+    ser_data.push(gravity,app_mass,data_mass,latency,ave_req,ave_req_size,bw);
+
+    
+    $('#app_graph').fadeOut('slow',function(){
+        $('#app_graph').css("display",'none');
+        $('#app_graph').css("width",'78%');
+
+    
+          $('#app_graph').highcharts({
+            chart: {
+                type: 'spline',
+                zoomType: 'xy'
+            },
+            title: {
+                text: 'Data Gravity Chart :: '+appName
+            },
+            subtitle: {
+                text: 'Data Graviry Log Of An Application'
+            },
+            xAxis: {
+                type: 'datetime',
+                maxZoom: 3600,
+                dateTimeLabelFormats: { // don't display the dummy year
+                  month: '%e. %b',
+                  year: '%b'
+                }
+            },
+            yAxis: {
+                title: {
+                  text: 'Values'
+                },
+                min: 0
+            },
+            tooltip: {
+                formatter: function() {
+                  return '<b>'+ this.series.name +'</b><br/>'+
+                  Highcharts.dateFormat('%e. %b %H:%M:%S:', this.x) +'| value: '+ this.y ;
+                }
+            },
+            series:ser_data
+          });
+          $('#app_graph').fadeIn('slow',function(){
+              $('#app_graph').css("display",'block');
+              $('#app_graph').css("width",'80%');
+              $.pageslide.close();
+          });
+
+    });
+
+  });
+  
+}
+
+function loadApp(){
+
+  $.get("/dgrav/core/api/index.php/public/allapp",function(data){
+    var obj = $.parseJSON(data);
+    apps = obj['data'];
+
+    $('#a_list').empty();
+    for(i=0;i<apps['result_count'] ;i++){
+      //console.log("<li>"+apps[i]['name']+"</li>");
+      $('#a_list').append("<li onclick=\"loadSingleApp('"+apps[i]['id']+"','"+apps[i]['name']+"')\">"+apps[i]['name']+"</li>");
+    }
+
+    //show some loading here..display all app if not failed
+    $.pageslide({ direction: 'left', href: '#modal' }); 
+  });
+ 
+}
+
+
+function preLoad(){
+
+  initVisualization(1);
+}

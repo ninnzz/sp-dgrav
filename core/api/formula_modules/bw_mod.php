@@ -26,13 +26,14 @@ class bwMod{
 			$commands = new LinuxCommands();
 		}
 		
-		$res = $this->getBW($commands::bw.$ip.$commands::bw_options);
+		$res = $this->getBW($commands::bw.' '.$ip.$commands::bw_options);
 		return $res;
 	}
 
 	private function getBW($command){
 		$res = array();
 
+		print_r($command);
 		exec($command,$res);
 
 		if(count($res) <= 1){

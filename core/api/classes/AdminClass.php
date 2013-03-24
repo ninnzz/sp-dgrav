@@ -1,5 +1,5 @@
 <?php
-
+defined('AppAUTH') or die;
 /*----------------------------
 
 Admin Class
@@ -136,7 +136,8 @@ class AdminClass{
 					return array('meta'=>array('code'=>'406','message'=>'Access denied.'),'data'=>'','result_count'=>0);
 				} else {
 					$opt = $db_connector->escape_string($_POST['monitoring']);
-					$res = $db_connector->post_query("update app set monitoring=".$opt);
+					$id = $db_connector->escape_string($_POST['id']);
+					$res = $db_connector->post_query("update app set monitoring=".$opt." where id='".$id."';");
 					
 					if(isset($res['error'])) {
 						return array('meta'=>array('code'=>'410','message'=>'Failed to update application monitoring status'),'data'=>'','result_count'=>0);
