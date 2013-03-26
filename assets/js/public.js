@@ -1,11 +1,50 @@
 google.load('visualization', '1', {packages: ['motionchart']});
 
+function scrollMe(opt){
+  if(opt == 0){
+    $('#cnt,body,html').animate({
+         scrollTop: $("#home").offset().top
+    }, 1000);
+    showDrag(0);
+  } else if(opt == 1){
+    $('#cnt,body,html').animate({
+         scrollTop:'700px'
+    }, 1000);
+    showDrag(0);
+  } else if(opt == 2){
+    $('#cnt,body,html').animate({
+         scrollTop: "1400px"
+    }, 1000);
+    showDrag(0);
+  }
+}
+function showDrag(opt){
+  tmp = document.getElementById('curr_graph').value;
+  if(tmp == 1){
+    rc = "<h4>Comparison variable <br/>for the size of bubble:</h4><select id='bubble_select'><option value='1'>Data Mass</option><option value='2'>Application Mass</option><option value='3'>Average Request</option><option value='4'>Latency</option><option value='5'>Average Request Size</option><option value='6'>Bandwidth</option></select><br/><button class='btn btn-large btn-success' onclick='initVisualization(1)' type='button'>Render Graph</button><br/>Compare data gravity between different application by simply selecting the application from the bottom part of the graph";
+
+  } else if(tmp == 2){
+    rc = "<h4>MotionChart is used to compare<br/> daily average Data Gravity</h4><br/>&nbsp;&nbsp;&nbsp;-Change <span class='label label-inverse'>Y-Axis</span> paramters on the left part of the graph.<br/>&nbsp;&nbsp;&nbsp;-Change <span class='label label-inverse'>X-Axis</span> paramters on the bottom part of the graph.<br/>&nbsp;&nbsp;&nbsp;-Change <span class='label label-inverse'>Color Representation</span> of the entities in the upper right part of the graph.<br/>&nbsp;&nbsp;&nbsp;-Change <span class='label label-inverse'>Size Representation</span> paramters on the right part of the graph.<br/>&nbsp;&nbsp;&nbsp;-A <span class='label label-inverse'>Time Slider</span> is also provided at the bottom of the graph(Applies only if the duration is <span class='label label-warning'>more than one day</span>).";
+
+  } else if(tmp == 3){
+    rc = "<h4>Spline Chart</h4><br/>Spline chart shows patterns and trends on data. Same as in bubble chart, you can zoon in data by dragging and selecting the portion in the graph that needed to be zoomed. You can also select vissible application at the bottom of the graph.";
+  }
+
+  if(opt == 1){
+    $('#root_cnt').empty().html(rc);
+    $("#root").fadeIn("fast",function(){
+      $('#root').css('display','block');
+      $('#dragButton').attr('onclick','showDrag(0)');
+    });
+  } else if(opt == 0){
+    $("#root").fadeOut("slow",function(){
+      $('#root').css('display','none');
+      $('#dragButton').attr('onclick','showDrag(1)');
+    });
+  }
+}
 function drawMotionChart(app_arr) {
   var data = new google.visualization.DataTable();
-
-
-
-
   var ser = [];
   for(i=0;i<app_arr.length;i++){
     
@@ -39,7 +78,7 @@ function drawMotionChart(app_arr) {
   document.getElementById('visualization'));
   var options = {};
   options['state'] = {"iconKeySettings":[],"stateVersion":3,"time":"notime","xAxisOption":"_NOTHING","playDuration":15,"iconType":"BUBBLE","sizeOption":"_NOTHING","xZoomedDataMin":null,"xZoomedIn":false,"duration":{"multiplier":1,"timeUnit":"hours"},"yZoomedDataMin":null,"xLambda":1,"colorOption":"_NOTHING","nonSelectedAlpha":0.4,"dimensions":{"iconDimensions":[]},"yZoomedIn":false,"yAxisOption":"_NOTHING","yLambda":1,"yZoomedDataMax":null,"showTrails":true,"xZoomedDataMax":null};
-  //options['state'] = {"uniColorForNonSelected":false,"iconKeySettings":[],"yAxisOption":"3","nonSelectedAlpha":0.4,"time":"notime","showTrails":true,"xAxisOption":"2","yZoomedDataMin":131.39472294,"yLambda":1,"yZoomedDataMax":139.39472294,"orderedByY":false,"xZoomedDataMin":0.0039856908062182,"yZoomedIn":false,"orderedByX":false,"playDuration":15000,"xZoomedIn":false,"iconType":"BUBBLE","xLambda":1,"colorOption":"4","duration":{"timeUnit":"hours","multiplier":2},"xZoomedDataMax":974519.53811087,"dimensions":{"iconDimensions":["dim0"]},"sizeOption":"2"};
+  
 
   options['width'] = 1000;
   options['height'] = 550;
@@ -118,7 +157,7 @@ function drawLineChart(app_arr){
 
 }
 
-function drawBubbleChart(app_arr){
+function drawBubbleChart(app_arr,opt){
     var ser = [];
     for(i=0;i<app_arr.length;i++){
       var app_i = {name:'',data:[]};
@@ -136,10 +175,23 @@ function drawBubbleChart(app_arr){
         tmp_date2 = ($.trim(tmp_date[1])).split(':');
         tmp_data = ($.trim(tmp[1])).split(',');
 
-        app_i['data'].push([Date.UTC(tmp_date1[0],((tmp_date1[1]*1)-1),tmp_date1[2],tmp_date2[0],tmp_date2[1],tmp_date2[2]),tmp_data[0]*1,tmp_data[4]*1]);
+        app_i['data'].push([Date.UTC(tmp_date1[0],((tmp_date1[1]*1)-1),tmp_date1[2],tmp_date2[0],tmp_date2[1],tmp_date2[2]),tmp_data[0]*1,tmp_data[opt]*1]);
 
       }
       ser.push(app_i);
+    }
+    if(opt == 1){
+      t_label = "Data Mass(MB)";
+    } else if(opt == 2){
+      t_label = "Application Mass(MB)";
+    } else if(opt == 3){
+      t_label = "Average Request per Second";
+    } else if(opt == 4){
+      t_label = "Latency(seconds)";
+    } else if(opt == 5){
+      t_label = "Average Request Size(MB)";
+    } else if(opt == 6){
+      t_label = "Bandwidth(MBs)";
     }
     console.log(ser);
     $('#visualization').fadeOut('slow',function(){
@@ -156,7 +208,7 @@ function drawBubbleChart(app_arr){
                 text: 'Data Gravity Chart'
             },
             subtitle: {
-                text: 'Comparison of Data Gravity by each Application'
+                text: 'Comparison of Data Gravity by each Application | Bubble Size ::'+t_label
             },
             xAxis: {
                 type: 'datetime',
@@ -197,14 +249,33 @@ function initVisualization(opt){
     app_arr = ($.trim(app)).split("<!>");
     
     if(opt==1){
-      $("#curr_graph").value='1';
-      drawBubbleChart(app_arr);
+      document.getElementById("curr_graph").value='1';
+      tmp = document.getElementById('bubble_select');
+      if(tmp){
+        bub = tmp.value;
+      }else{
+        bub = 2;
+        showDrag(0);
+      }
+
+      drawBubbleChart(app_arr,bub);
     } else if(opt==2){
-      $("#curr_graph").value='2';
+      document.getElementById("curr_graph").value='2'; 
+      $('#visualization').fadeOut('slow',function(){
+        $('#visualization').css("display",'none');
+        $('#visualization').css("width",'78%');
+
         drawMotionChart(app_arr);
+        $('#visualization').fadeIn('slow',function(){
+              $('#visualization').css("display",'block');
+              $('#visualization').css("width",'80%');
+        });
+      });
+      showDrag(0);
     } else if(opt==3){
-      $("#curr_graph").value='3';
-        drawLineChart(app_arr);
+      document.getElementById("curr_graph").value='3';
+      drawLineChart(app_arr);
+      showDrag(0);
     }
   });
 
@@ -339,6 +410,22 @@ function loadApp(){
 
 
 function preLoad(){
+  
+  $('#loading').animate({
+    opacity:'0'
+    },1000,function(){
+      $('#mainModal').modal({keyboard: false});       
+      $('#loading').css('display','none'); 
+      $('#content').css('display','block'); 
+      $('#content').animate({opacity:'1'},1000,function(){
+        initVisualization(1);
+        var theHandle = document.getElementById("handle");
+        var theRoot   = document.getElementById("root");
+        Drag.init(theHandle, theRoot,25,850,25,250);
 
-  initVisualization(1);
+      });
+
+  });
+
+ 
 }

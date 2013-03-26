@@ -104,6 +104,39 @@ a:hover{
 	border-bottom-left-radius: 100px; 
 	border-bottom-right-radius: 100px; 
 }
+#content{
+	display:none;
+}
+#loading{
+	width:100%;
+	height:100%;
+	background-color:#fff;
+	position:absolute;
+	top:0px;
+	left:0px;
+	text-align: center;
+}
+#root {
+	position:absolute;
+	height:400px;
+	width:400px;
+	background-color:#F4F4F4;
+	border:10px solid rgba(20,20,20,0.5);
+	border-radius: 300px;
+	text-align: center;
+	-moz-border-radius: 300px;
+	-webkit-border-radius: 300px;
+
+}
+#handle {
+	margin-left:auto;
+	margin-right:auto;
+	padding:2px;
+	color:white;
+	font-weight: bold;
+	width:19%;
+	cursor:move;
+}
 p, label{
 	color:#fff;
 }
@@ -151,19 +184,27 @@ p, label{
 
 </head>
 <body>
-
+<div id="loading">
+	<img src="../../assets/images/loading.gif" style="width:40%;height:40%;margin-left:auto;margin-right:auto;margin-top:100px;" />
+	<br/>
+	<p style="color:#000;font-family: Iceland;">Taking too long?<br/>
+	<i class="icon-refresh"></i><a href="" title="Check you internet connection or network">Refresh</a>
+	</p>
+	
+</div>
+<input type="hidden" id="curr_graph" value='1'/>
 <div class="container-fluid" id="content">
   <div class="row-fluid" >
   	<div id="hdr" class="span2">
 	<div id="m_logo">
-		<a href="" class="trans_item"><img src="../../assets/images/dgrav2.png" width=180/></a>
+		<a href="#" class="trans_item" onclick="scrollMe(0)"><img src="../../assets/images/dgrav2.png" width=180/></a>
 	</div>
 
 	<ul id='menu_list'>
-		<li><a href="#monitor" class="trans_item" onclick="initVisualization()">Monitoring</a></li>
-		<li><a href="#applist" class="trans_item">Applications</a></li>
-		<li><a href="#about" class="trans_item">About</a></li>
-		<li><a href="#contact" class="trans_item">Contacts</a></li>
+		<li><a href="#" id="monitor_click" class="trans_item"  onclick="scrollMe(1)" >Monitoring</a></li>
+		<li><a href="#" id="applist_click" class="trans_item" onclick="scrollMe(2)" >Applications</a></li>
+		<li><a href="#" id="about_click" class="trans_item">About</a></li>
+		<li><a href="#" id="contact_click" class="trans_item">Contacts</a></li>
 	</ul>
 
 	</div>
@@ -186,6 +227,9 @@ p, label{
 				<br/>
 				<br/>
 				<a href='https://www.facebook.com/pprmint' target='new'><i class="icon-leaf"></i>pprmint</a>
+				<br/>
+				<br/>
+				<a href="#mainModal" role="button" data-toggle="modal" ><i class="icon-question-sign"></i></a>
 
 	    	</div>
 	    	<div style="float:right;">
@@ -194,15 +238,34 @@ p, label{
 	    			<br/>-Albert Einstein
 	    		</p>
 	    	</div>
+    		<!-- Modal -->
+			<div id="mainModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-header">
+					<h3 id="myModalLabel">Welcome!</h3>
+					</div>
+					<div class="modal-body">
+						<p  style="color:#111;font-size:16px;font-family: Century Gothic;">&nbsp;&nbsp;&nbsp;Data gravity is concept coined by <a href="http://blog.mccrory.me/" target="new">Dave McCrory</a>. It gives the idea that data and applications can be treated as entities that exerts force(gravity) over each other.<br/>
+						&nbsp;&nbsp;&nbsp;This application provides tools and ways of visualizing and enterpreting data gravity.
+						<br/><br/>
+						<span class="label label-success">Monitoring</span> Tab provides the overall preview of data gravity of applications that dGrav monitors. It provides options on effective comparison between variables and factors that affect Data Gravity.
+		            	<br/><br/>
+						<span class="label label-info">Applications</span> Tab allows the user to view information of a <em>specific</em> application. It shows the logs of an application in terms of latency, bandwidth, and other factors that affect Data Gravity.
+						<br/><br/>
+						&nbsp;&nbsp;&nbsp;For <span class="label label-important">instructions</span> and <span class="label label-important">information</span> on a specific function, the <i class="icon-question-sign"></i> icon will provide a window that states the instruction and user guide on a specific part of the application.
+		            	</p>
+					</div>
+				<div class="modal-footer">
+				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+				</div>
+			</div>
 	    </div>
 	   
 	    <div id="monitor" class="div_ent">
 	    	<div>
 		    	<h2 style="color:#fff;">Monitor</h2>
 		    	<a href="javascript:$.pageslide({ direction: 'left', href: 'https://google.com' }); " style="float:right" class='small_circle'><i class="icon-arrow-left"></i></a>
-		    	<a href="#" style="float:right" class='small_circle'><i class="icon-question-sign"></i></a>
+		    	<a href="#" id="dragButton" style="float:right" class='small_circle' onclick="showDrag(1)"><i class="icon-question-sign"></i></a>
 				<div style="margin-left:10px; width:20%;" >
-					<input type="hidden" id="curr_graph" value='1'/>
 					<div class="btn-group" data-toggle="buttons-radio">
 						<button type="button" class="btn" onclick="initVisualization(1)">Bubble Chart</button>
 						<button type="button" class="btn" onclick="initVisualization(2)">Motion Graph(daily interval)</button>
@@ -212,23 +275,57 @@ p, label{
 	    	</div>
 	    	<div id="visualization" style='width:1000px;height:550px;'>
 	    	</div>
+			<div id="root" style="left:550px; top:100px;display:none;background-color:#eee;z-index:200;">
+				<div id="handle"><span class="label label-important" style="font-size:20px;">Drag Me</span></div>
+				<div id='root_cnt' style="padding-left:20px;padding-right:20px;margin-top:25px;font-size:15px;font-family: Century Gothic;">
+				</div>
+			</div>
 
 		</div>
 
 		<div id="applist" class="div_ent">
 
 			<h2 style="color:#fff;">Applications</h2>
-			<a href="javascript:loadApp()"><i class="icon-list-alt icon-white"></i>Show Applications</a>
+			<a href="#myModal" role="button" data-toggle="modal" style="float:right" class='small_circle'><i class="icon-question-sign"></i></a>
+			<a href="javascript:loadApp()" title="Shows all the available application"><i class="icon-list-alt icon-white"></i>Show Applications</a>
+				
 			<div id="app_cnt" style="width:100%;">
 				<div id="app_graph" style="max-width:80%;margin-top:20px;height:500px;">
 				<!--<img src="../../assets/images/arrow.png" class="trans_item"/>-->
 				</div>
 
-				<div id="inst2">
+				<div id="inst2" style="color:#F53649;">
 				<i class="icon-arrow-up"></i>Select/Deslect items to be vied by clicking on its label.<br/>
 				<i class="icon-zoom-in"></i>Zoom by selecting portions of the graph screen.
 				</div>
 			</div>
+			
+			<!-- Modal -->
+			<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-header">
+					<h3 id="myModalLabel">Instructions</h3>
+					</div>
+					<div class="modal-body">
+						<p  style="color:#111;font-size:16px;font-family: Century Gothic;">Data gravity is computed using the ff:<br/>
+		            		&nbsp;&nbsp;&nbsp;-Application Mass<br/>
+		            		&nbsp;&nbsp;&nbsp;-Data Mass<br/>
+		            		&nbsp;&nbsp;&nbsp;-Latency<br/>
+		            		&nbsp;&nbsp;&nbsp;-Average Request Size<br/>
+		            		&nbsp;&nbsp;&nbsp;-Average Request<br/>
+		            		&nbsp;&nbsp;&nbsp;-Bandwidth<br/>
+		            		
+		            		<br/>
+		            		You can <span class="label label-important">compare the parameters</span> by enabling and disabling the corresponding variable on the <span class="label label-important">bottom part</span> of the graph.
+		            		<br/>
+		            		<br/>
+		            		Choose application by clicking <span class="label label-inverse"><i class="icon-list-alt icon-white"></i>Show Apllication</span> link on the upper left corner of the screen.
+		            	</p>
+					</div>
+				<div class="modal-footer">
+				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+				</div>
+			</div>
+
 			<div id="modal" class="span2">
 	            <h2>Application List</h2>
 	            <hr/>
@@ -236,7 +333,8 @@ p, label{
 
 	            </ul>
 	            <hr/>
-	            <a href="javascript:$.pageslide.close()"><i class="icon-remove"></i>Close</a>
+	            
+				<a href="javascript:$.pageslide.close()"><i class="icon-remove"></i>Close</a>
         	</div>
 		</div>
   	</div>
@@ -250,6 +348,7 @@ p, label{
 <script src="../../assets/js/highcharts.js"></script>
 <script src="../../assets/js/highcharts-more.js"></script>
 <script src="../../assets/js/exporting.js"></script>
+<script src="../../assets/js/dom-drag.js"></script>
 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
 <script src="../../assets/js/public.js"></script>
 <script type='text/javascript'>
