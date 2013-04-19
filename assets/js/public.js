@@ -16,6 +16,11 @@ function scrollMe(opt){
          scrollTop: "1400px"
     }, 1000);
     showDrag(0);
+  } else if(opt == 3){
+    $('#cnt,body,html').animate({
+         scrollTop: "2100px"
+    }, 1000);
+    showDrag(0);
   }
 }
 function showDrag(opt){
@@ -282,7 +287,7 @@ function initVisualization(opt){
 
 }
 
-function loadSingleApp(id,appName){
+function loadSingleApp(id,appName,opt){
 
   $.get("/dgrav/core/api/index.php/public/app/"+id,function(data){
     var obj = $.parseJSON(data);
@@ -337,24 +342,57 @@ function loadSingleApp(id,appName){
       ave_req_size['data'].push([Date.UTC(tmp_date1[0],((tmp_date1[1]*1)-1),tmp_date1[2],tmp_date2[0],tmp_date2[1],tmp_date2[2]),tmp_data[5]*1]);
       bw['data'].push([Date.UTC(tmp_date1[0],((tmp_date1[1]*1)-1),tmp_date1[2],tmp_date2[0],tmp_date2[1],tmp_date2[2]),tmp_data[6]*1]);
     }
-    ser_data.push(gravity,app_mass,data_mass,latency,ave_req,ave_req_size,bw);
 
-    
-    $('#app_graph').fadeOut('slow',function(){
-        $('#app_graph').css("display",'none');
-        $('#app_graph').css("width",'78%');
+    if(opt == 1){
+      loadAppVariables("#app1_g",appName,"Data Gravity","data gravity",[gravity,data_mass,app_mass,latency,bw,ave_req,ave_req_size]);
+      // loadAppVariables("#app_graph",appName,"Data Gravity","data gravity",[gravity]);
+      loadAppVariables("#app1_a",appName,"Data Mass","MB",[data_mass]);
+      loadAppVariables("#app1_d",appName,"Application Mass","MB",[app_mass]);
+      loadAppVariables("#app1_l",appName,"Latency","Seconds",[latency]);
+      loadAppVariables("#app1_b",appName,"Bandwidth","MBps",[bw]);
+      loadAppVariables("#app1_ar",appName,"Average Requests","Requests per second",[ave_req]);
+      loadAppVariables("#app1_ars",appName,"Average Request Size","MB",[ave_req_size]);
 
+    } else if(opt == 2){
+      loadAppVariables("#app2_g",appName,"Data Gravity","data gravity",[gravity,data_mass,app_mass,latency,bw,ave_req,ave_req_size]);
+      // loadAppVariables("#app_graph",appName,"Data Gravity","data gravity",[gravity]);
+      loadAppVariables("#app2_a",appName,"Data Mass","MB",[data_mass]);
+      loadAppVariables("#app2_d",appName,"Application Mass","MB",[app_mass]);
+      loadAppVariables("#app2_l",appName,"Latency","Seconds",[latency]);
+      loadAppVariables("#app2_b",appName,"Bandwidth","MBps",[bw]);
+      loadAppVariables("#app2_ar",appName,"Average Requests","Requests per second",[ave_req]);
+      loadAppVariables("#app2_ars",appName,"Average Request Size","MB",[ave_req_size]);
+
+    } else{
+      loadAppVariables("#app_graph",appName,"Data Gravity","data gravity",[gravity,data_mass,app_mass,latency,bw,ave_req,ave_req_size]);
+      // loadAppVariables("#app_graph",appName,"Data Gravity","data gravity",[gravity]);
+      loadAppVariables("#data_mass_graph",appName,"Data Mass","MB",[data_mass]);
+      loadAppVariables("#app_mass_graph",appName,"Application Mass","MB",[app_mass]);
+      loadAppVariables("#latency_graph",appName,"Latency","Seconds",[latency]);
+      loadAppVariables("#bw_graph",appName,"Bandwidth","MBps",[bw]);
+      loadAppVariables("#ave_req_graph",appName,"Average Requests","Requests per second",[ave_req]);
+      loadAppVariables("#req_size_graph",appName,"Average Request Size","MB",[ave_req_size]);
+    }
+  });
+  
+}
+
+
+function loadAppVariables(targetDiv,appName,varName,varUnit,ser_data){    
+    $(targetDiv).fadeOut('slow',function(){
+        $(targetDiv).css("display",'none');
+        $(targetDiv).css("width",'75%');
     
-          $('#app_graph').highcharts({
+          $(targetDiv).highcharts({
             chart: {
                 type: 'spline',
                 zoomType: 'xy'
             },
             title: {
-                text: 'Data Gravity Chart :: '+appName
+                text: 'Data Gravity Chart :: '+appName+' :: '+varName
             },
             subtitle: {
-                text: 'Data Graviry Log Of An Application'
+                text: varName+' Log of Application'
             },
             xAxis: {
                 type: 'datetime',
@@ -366,29 +404,30 @@ function loadSingleApp(id,appName){
             },
             yAxis: {
                 title: {
-                  text: 'Values'
+                  text: varUnit
                 },
                 min: 0
             },
             tooltip: {
                 formatter: function() {
                   return '<b>'+ this.series.name +'</b><br/>'+
-                  Highcharts.dateFormat('%e. %b %H:%M:%S:', this.x) +'| value: '+ this.y ;
+                  Highcharts.dateFormat('%e. %b %H:%M:%S:', this.x) +'| '+varName+': '+ this.y ;
                 }
             },
             series:ser_data
           });
-          $('#app_graph').fadeIn('slow',function(){
-              $('#app_graph').css("display",'block');
-              $('#app_graph').css("width",'80%');
+          $(targetDiv).fadeIn('slow',function(){
+              $(targetDiv).css("display",'block');
+              $(targetDiv).css("width",'75%');
               $.pageslide.close();
           });
 
     });
 
-  });
+
   
 }
+
 
 function loadApp(){
 
@@ -399,13 +438,38 @@ function loadApp(){
     $('#a_list').empty();
     for(i=0;i<apps['result_count'] ;i++){
       //console.log("<li>"+apps[i]['name']+"</li>");
-      $('#a_list').append("<li onclick=\"loadSingleApp('"+apps[i]['id']+"','"+apps[i]['name']+"')\">"+apps[i]['name']+"</li>");
+      $('#a_list').append("<li onclick=\"loadSingleApp('"+apps[i]['id']+"','"+apps[i]['name']+"',0)\">"+apps[i]['name']+"</li>");
     }
 
     //show some loading here..display all app if not failed
     $.pageslide({ direction: 'left', href: '#modal' }); 
   });
  
+}
+function initCompApp(){
+  $.get("/dgrav/core/api/index.php/public/allapp",function(data){
+    var obj = $.parseJSON(data);
+    apps = obj['data'];
+
+    $('#app1_select').empty();
+    $('#app2_select').empty();
+    for(i=0;i<apps['result_count'] ;i++){
+      //console.log("<li>"+apps[i]['name']+"</li>");
+      $('#app1_select').append("<option value='"+apps[i]['id']+"|"+apps[i]['name']+"'>"+apps[i]['name']+"</option>");
+      $('#app2_select').append("<option value='"+apps[i]['id']+"|"+apps[i]['name']+"'>"+apps[i]['name']+"</option>");
+    }
+  });
+
+}
+function showComparison(){
+  $('#clear').fadeIn().css('display','block');
+  app1 = document.getElementById("app1_select").value;
+  app2 = document.getElementById("app2_select").value;
+  app1 = app1.split('|');
+  app2 = app2.split('|');
+ 
+  loadSingleApp(app1[0],app1[1],1)
+  loadSingleApp(app2[0],app2[1],2)
 }
 
 
@@ -419,6 +483,7 @@ function preLoad(){
       $('#content').css('display','block'); 
       $('#content').animate({opacity:'1'},1000,function(){
         initVisualization(1);
+        initCompApp();
         var theHandle = document.getElementById("handle");
         var theRoot   = document.getElementById("root");
         Drag.init(theHandle, theRoot,25,850,25,250);
