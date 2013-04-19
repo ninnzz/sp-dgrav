@@ -69,7 +69,7 @@ class dgravMainModule{
 		$requests = $request->index($this->appData['db_name'],$this->appData['host']);
 		$bw = $bandwidth->index($this->appData['host']);
 		$lat = $latency->index($this->appData['host']);
-/*
+/*e
 		print_r($data_mass);
 		print_r($requests);
 		print_r($lat);

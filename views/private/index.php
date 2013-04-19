@@ -32,7 +32,7 @@ body{
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" style='color:#fff' href="http://localhost/dgrav/views/private/dgrav-admin-index.php">dGrav</a>
+          <a class="brand" style='color:#fff' href="http://localhost/dgrav/views/private/index.php">dGrav</a>
           <div class="nav-collapse collapse">
             <p class="navbar-text pull-right">
               <a href="#" class="navbar-link">Admin</a>
@@ -41,10 +41,7 @@ body{
               <li class="divider-vertical"></li>	
               <li><a href="http://localhost/dgrav/views/private/dgrav-app-data-config.php">Data/App Config</a></li>
               <li class="divider-vertical"></li>
-              <li><a href="#about">Constants</a></li>
-              <li class="divider-vertical"></li>
-              <li><a href="#contact">About</a></li>
-              <li class="divider-vertical"></li>
+              
             </ul>
           </div><!--/.nav-collapse -->
         </div>

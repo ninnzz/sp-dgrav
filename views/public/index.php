@@ -203,8 +203,7 @@ p, label{
 	<ul id='menu_list'>
 		<li><a href="#" id="monitor_click" class="trans_item"  onclick="scrollMe(1)" >Monitoring</a></li>
 		<li><a href="#" id="applist_click" class="trans_item" onclick="scrollMe(2)" >Applications</a></li>
-		<li><a href="#" id="about_click" class="trans_item">About</a></li>
-		<li><a href="#" id="contact_click" class="trans_item">Contacts</a></li>
+		
 	</ul>
 
 	</div>
@@ -263,7 +262,7 @@ p, label{
 	    <div id="monitor" class="div_ent">
 	    	<div>
 		    	<h2 style="color:#fff;">Monitor</h2>
-		    	<a href="javascript:$.pageslide({ direction: 'left', href: 'https://google.com' }); " style="float:right" class='small_circle'><i class="icon-arrow-left"></i></a>
+		    	<a href="javascript:$.pageslide({ direction: 'left', href: 'instructions.html' }); " style="float:right" class='small_circle'><i class="icon-arrow-left"></i></a>
 		    	<a href="#" id="dragButton" style="float:right" class='small_circle' onclick="showDrag(1)"><i class="icon-question-sign"></i></a>
 				<div style="margin-left:10px; width:20%;" >
 					<div class="btn-group" data-toggle="buttons-radio">
@@ -277,6 +276,7 @@ p, label{
 	    	</div>
 			<div id="root" style="left:550px; top:100px;display:none;background-color:#eee;z-index:200;">
 				<div id="handle"><span class="label label-important" style="font-size:20px;">Drag Me</span></div>
+				<a href="#" class="small_circle" onclick="showDrag(0)">Close<i class="icon-remove-circle"></i></a>
 				<div id='root_cnt' style="padding-left:20px;padding-right:20px;margin-top:25px;font-size:15px;font-family: Century Gothic;">
 				</div>
 			</div>

@@ -27,7 +27,7 @@ function showDrag(opt){
     rc = "<h4>MotionChart is used to compare<br/> daily average Data Gravity</h4><br/>&nbsp;&nbsp;&nbsp;-Change <span class='label label-inverse'>Y-Axis</span> paramters on the left part of the graph.<br/>&nbsp;&nbsp;&nbsp;-Change <span class='label label-inverse'>X-Axis</span> paramters on the bottom part of the graph.<br/>&nbsp;&nbsp;&nbsp;-Change <span class='label label-inverse'>Color Representation</span> of the entities in the upper right part of the graph.<br/>&nbsp;&nbsp;&nbsp;-Change <span class='label label-inverse'>Size Representation</span> paramters on the right part of the graph.<br/>&nbsp;&nbsp;&nbsp;-A <span class='label label-inverse'>Time Slider</span> is also provided at the bottom of the graph(Applies only if the duration is <span class='label label-warning'>more than one day</span>).";
 
   } else if(tmp == 3){
-    rc = "<h4>Spline Chart</h4><br/>Spline chart shows patterns and trends on data. Same as in bubble chart, you can zoon in data by dragging and selecting the portion in the graph that needed to be zoomed. You can also select vissible application at the bottom of the graph.";
+    rc = "<h4>Spline Chart</h4><br/>Spline chart shows patterns and trends on data. Same as in bubble chart, you can zoon in data by <span class='label label-success'>dragging</span> and <span class='label label-info'>selecting</span> the portion in the graph that needed to be zoomed. You can also <span class='label label-inverse'>select</span> vissible <span class='label label-inverse'>application</span> at the bottom of the graph.";
   }
 
   if(opt == 1){
@@ -143,7 +143,7 @@ function drawLineChart(app_arr){
             tooltip: {
                 formatter: function() {
                   return '<b>'+ this.series.name +'</b><br/>'+
-                  Highcharts.dateFormat('%e. %b %H:%M:%S:', this.x) +'| value: '+ this.y ;
+                  Highcharts.dateFormat('%e. %b %H:%M:%S:', this.x) +'| Data Gravity: '+ this.y ;
                 }
             },
             series:ser
@@ -227,7 +227,7 @@ function drawBubbleChart(app_arr,opt){
             tooltip: {
                 formatter: function() {
                   return '<b>'+ this.series.name +'</b><br/>'+
-                  Highcharts.dateFormat('%e. %b %H:%M:%S:', this.x) +'| value: '+ this.y ;
+                  Highcharts.dateFormat('%e. %b %H:%M:%S:', this.x) +'| Data Gravity: '+ this.y +" | " + t_label+":"+ this.point.z ;
                 }
             },
             series:ser
