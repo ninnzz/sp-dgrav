@@ -376,10 +376,11 @@ p, label{
 			<select id="app2_select">
 			</select>
 			<br/>
-			<button class='btn btn-success btn-large' onclick="showComparison()">Show Comparison Between Application</button>
+			<button class='btn btn-success btn-large' onclick="showComparison(1)">Show Comparison Between Application</button>
 			<div id="clear">
-				<h3>Comparison Between</h3><br/>
-				
+				<button class='btn btn-danger' onclick="showComparison(2)">Close</button><br/>
+				<div id='comp_title' style="width:80%;">
+				</div>
 				<div id="app_compare" style="width:100%;height:600px;overflow-y:auto;">
 					<div id="block1">
 						<div id="app1_g" style="max-width:45%;float:left;"></div><div id="app2_g" style="max-width:45%;float:left;margin-left:10px;"></div>

@@ -461,17 +461,22 @@ function initCompApp(){
   });
 
 }
-function showComparison(){
-  $('#clear').fadeIn().css('display','block');
-  app1 = document.getElementById("app1_select").value;
-  app2 = document.getElementById("app2_select").value;
-  app1 = app1.split('|');
-  app2 = app2.split('|');
- 
-  loadSingleApp(app1[0],app1[1],1)
-  loadSingleApp(app2[0],app2[1],2)
-}
+function showComparison(opt){
+  if(opt == 1){
+    $('#clear').fadeIn().css('display','block');
+    app1 = document.getElementById("app1_select").value;
+    app2 = document.getElementById("app2_select").value;
+    app1 = app1.split('|');
+    app2 = app2.split('|');
+    $('#comp_title').html("<span class='label label-success'>App1::"+app1[1]+"</span><span class='label label-success' style='float:right;'>App2::"+app2[1]+"</span>")
+    loadSingleApp(app1[0],app1[1],1)
+    loadSingleApp(app2[0],app2[1],2)
+  } else if(opt == 2){
+    $('#clear').css('display','none').fadeOut();
 
+  }
+}
+  
 
 function preLoad(){
   
